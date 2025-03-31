@@ -1,0 +1,262 @@
+-- ETW Plus Made by Naiko Exploits --
+
+repeat task.wait() until game:IsLoaded() and task.wait(0.5) and workspace.DistributedGameTime > 2.5
+
+if game:GetService("CoreGui"):FindFirstChild("Plus") then
+	return warn("Script already running")
+elseif tostring(game.GameId) == "5677613211" then
+	Instance.new("BoolValue",game:GetService("CoreGui")).Name = "Plus"
+else
+	return warn("Incorrect game")
+end
+
+-- General variables --
+
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local PlayerGui = LocalPlayer:FindFirstChildOfClass("PlayerGui") or LocalPlayer:WaitForChild("PlayerGui",20)
+local UI = PlayerGui:FindFirstChild("ScreenGui") or PlayerGui:WaitForChild("ScreenGui",20)
+local SideButtons = UI:FindFirstChild("SideButtons") or UI:WaitForChild("SideButtons",20)
+local OptionsMenu = UI:FindFirstChild("Options") or UI:WaitForChild("Options",20)
+local Options = SideButtons:FindFirstChild("Options") or SideButtons:WaitForChild("Options",20)
+local ButttonTemplate = OptionsMenu:FindFirstChild("Frame"):FindFirstChild("Music"):Clone() or OptionsMenu:WaitForChild("Frame"):WaitForChild("Music",20):Clone()
+local PlusMenu = OptionsMenu:Clone()
+local TweenService = game:GetService("TweenService")
+local Connection
+local GameVersion = 257
+local Version = 1.0
+
+-- UI Creation --
+
+PlusMenu.Visible = false
+PlusMenu.Name = "PlusMenu"
+PlusMenu:FindFirstChild("Nametags"):Destroy()
+PlusMenu:FindFirstChild("OptionsScript"):Destroy()
+PlusMenu:FindFirstChild("UIStroke").Color = Color3.fromRGB(2, 178, 132)
+PlusMenu:FindFirstChild("Background").BackgroundColor3 = Color3.fromRGB(0, 83, 68)
+PlusMenu:FindFirstChild("TextLabel").Text = "ETW Plus"
+PlusMenu:FindFirstChild("TextLabel").TextColor3 = Color3.fromRGB(255, 255, 255)
+PlusMenu:FindFirstChild("TextLabel").TextStrokeTransparency = 0.5
+PlusMenu.Parent = UI
+PlusMenu:FindFirstChild("Done").MouseButton1Click:Connect(function()
+    PlusMenu.Visible = false
+end)
+
+local MenuFrame = PlusMenu:FindFirstChild("Frame") or PlusMenu:WaitForChild("Frame",20)
+MenuFrame:FindFirstChild("ImageLabel").BackgroundColor3 = Color3.fromRGB(0, 51, 36)
+MenuFrame:FindFirstChild("UIStroke").Color = Color3.fromRGB(3, 124, 96)
+MenuFrame:FindFirstChild("Music"):Destroy()
+MenuFrame:FindFirstChild("sfx"):Destroy()
+MenuFrame:FindFirstChild("Particles"):Destroy()
+
+
+local PlusButton = Options:Clone()
+PlusButton.Parent = SideButtons
+PlusButton.Name = "Plus"
+PlusButton.Size = UDim2.new(0,0,0,0)
+PlusButton.BackgroundColor3 = Color3.fromRGB(0, 150, 125)
+PlusButton.LayoutOrder = 70
+PlusButton.MouseButton1Click:Connect(function()
+    PlusMenu.Visible = not PlusMenu.Visible
+end)
+
+local Icon = PlusButton:FindFirstChild("Icon") or PlusButton:WaitForChild("Icon",20)
+Icon.Image = "rbxassetid://107164355096640"
+Icon.Size = UDim2.new(1, 0, 1, 0)
+
+local UIStroke = PlusButton:FindFirstChild("UIStroke") or PlusButton:WaitForChild("UIStroke",20)
+UIStroke.Color = Color3.fromRGB(0, 138, 121)
+UIStroke.Enabled = false
+
+-- General functions --
+
+function RunEvent(Player:Player,EventName:string)
+    task.spawn(function()
+    if Player ~= nil and Player.Character ~= nil and Player.Character:FindFirstChild("Events") then
+        if Player.Character.Events:FindFirstChild(EventName) then
+            Player.Character.Events[EventName]:FireServer()
+        else
+            warn("Failed to find event: " .. EventName)
+        end
+    else
+        warn("Failed to find player or character: " .. tostring(Player.Name))
+    end
+    end)
+end
+
+function CreateButton(Position:UDim2,AnchorPoint,Name:string,Type:string,Function,DefaultState)
+    local Button = ButttonTemplate:Clone()
+    Button.Parent = PlusMenu:FindFirstChild("Frame") or PlusMenu:WaitForChild("Frame")
+    Button.Name = Name
+    Button.Position = Position
+    Button.AnchorPoint = AnchorPoint
+    Button.Title.Text = Name
+    if Type == "Switch" then
+        if DefaultState == true then
+            Button:FindFirstChild("TextButton").Text = "On"
+        else
+            Button:FindFirstChild("TextButton").Text = "Off"
+        end
+        Button:FindFirstChild("TextButton").MouseButton1Click:Connect(function()
+            if DefaultState == false then
+                DefaultState = true
+                Button:FindFirstChild("TextButton").Text = "On"
+                Function(true)
+            else
+                DefaultState = false
+                Button:FindFirstChild("TextButton").Text = "Off"
+                Function(false)
+            end
+        end)
+    elseif Type == "Run" then
+        Button:FindFirstChild("TextButton").Text = "RUN"
+        Button:FindFirstChild("TextButton").MouseButton1Click:Connect(function()
+            Function()
+        end)
+    end
+end
+
+function ResetUI()
+    PlusMenu.Visible = false
+    PlusMenu.Name = "PlusMenu"
+    PlusMenu:FindFirstChild("Nametags"):Destroy()
+    PlusMenu:FindFirstChild("OptionsScript"):Destroy()
+    PlusMenu:FindFirstChild("UIStroke").Color = Color3.fromRGB(2, 178, 132)
+    PlusMenu:FindFirstChild("Background").BackgroundColor3 = Color3.fromRGB(0, 83, 68)
+    PlusMenu:FindFirstChild("TextLabel").Text = "ETW Plus"
+    PlusMenu:FindFirstChild("TextLabel").TextColor3 = Color3.fromRGB(255, 255, 255)
+    PlusMenu:FindFirstChild("TextLabel").TextStrokeTransparency = 0.5
+    PlusMenu.Parent = UI
+    PlusMenu:FindFirstChild("Done").MouseButton1Click:Connect(function()
+        PlusMenu.Visible = false
+    end)
+    
+    local MenuFrame = PlusMenu:FindFirstChild("Frame") or PlusMenu:WaitForChild("Frame",20)
+    MenuFrame:FindFirstChild("ImageLabel").BackgroundColor3 = Color3.fromRGB(0, 51, 36)
+    MenuFrame:FindFirstChild("UIStroke").Color = Color3.fromRGB(3, 124, 96)
+    MenuFrame:FindFirstChild("Music"):Destroy()
+    MenuFrame:FindFirstChild("sfx"):Destroy()
+    MenuFrame:FindFirstChild("Particles"):Destroy()
+    
+    
+    local PlusButton = Options:Clone()
+    PlusButton.Parent = SideButtons
+    PlusButton.Name = "Plus"
+    PlusButton.Size = UDim2.new(1,0,1,0)
+    PlusButton.BackgroundColor3 = Color3.fromRGB(0, 150, 125)
+    PlusButton.LayoutOrder = 70
+    PlusButton.MouseButton1Click:Connect(function()
+        PlusMenu.Visible = not PlusMenu.Visible
+    end)
+    
+    local Icon = PlusButton:FindFirstChild("Icon") or PlusButton:WaitForChild("Icon",20)
+    Icon.Image = "rbxassetid://107164355096640"
+    Icon.Size = UDim2.new(1, -10, 1, -10)
+    
+    local UIStroke = PlusButton:FindFirstChild("UIStroke") or PlusButton:WaitForChild("UIStroke",20)
+    UIStroke.Color = Color3.fromRGB(0, 138, 121)
+
+    CreateButton(UDim2.new(0.05,0,0.05,0),Vector2.new(0,0),"SELL ALL","Switch",function(value)
+        _G.LoopSell = value
+      end,_G.LoopSell)
+
+    CreateButton(UDim2.new(0.95,0,0.05,0),Vector2.new(1,0),"THROW ALL","Switch",function(value)
+        _G.LoopThrow = value
+      end,_G.LoopThrow)
+
+    CreateButton(UDim2.new(0.05,0,0.25,0),Vector2.new(0,0),"WALK WHILE GRAB","Switch",function(value)
+        _G.Unfreeze = value
+    end,_G.Unfreeze)
+end
+
+-- General Scripting --
+
+_G.Unfreeze = true
+LocalPlayer.CharacterAdded:Connect(function(char)
+    UI = PlayerGui:FindFirstChild("ScreenGui") or PlayerGui:WaitForChild("ScreenGui",20)
+    SideButtons = UI:FindFirstChild("SideButtons") or UI:WaitForChild("SideButtons",20)
+    OptionsMenu = UI:FindFirstChild("Options") or UI:WaitForChild("Options",20)
+    Options = SideButtons:FindFirstChild("Options") or SideButtons:WaitForChild("Options",20)
+    PlusMenu = OptionsMenu:Clone()
+    ResetUI()
+    Connection = char:FindFirstChild("HumanoidRootPart"):GetPropertyChangedSignal("Anchored"):Connect(function()
+       if _G.Unfreeze == true then
+            if char:FindFirstChild("HumanoidRootPart") then
+                char.HumanoidRootPart.Anchored = false
+            end
+        end
+    end)
+end)
+
+TweenService:Create(PlusButton, TweenInfo.new(0.5, Enum.EasingStyle.Circular, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, 0)}):Play()
+TweenService:Create(Icon, TweenInfo.new(0.5, Enum.EasingStyle.Circular, Enum.EasingDirection.Out), {Size = UDim2.new(1, -10, 1, -10)}):Play()
+UIStroke.Enabled = true
+
+_G.LoopSell = false
+task.spawn(function()
+while true do
+    task.wait(.04)
+    if _G.LoopSell == true then
+    for i,v in game.Players:GetPlayers() do
+        if v.Name ~= LocalPlayer.Name then
+            RunEvent(v,"Sell")
+        end
+    end
+end
+end
+end)
+
+CreateButton(UDim2.new(0.05,0,0.05,0),Vector2.new(0,0),"SELL ALL","Switch",function(value)
+  _G.LoopSell = value
+end,false)
+
+
+_G.LoopThrow = false
+task.spawn(function()
+while true do
+    task.wait(.02)
+    if _G.LoopThrow == true then
+    for i,v in game.Players:GetPlayers() do
+        if v.Name ~= LocalPlayer.Name then
+            RunEvent(v,"Throw")
+        end
+    end
+end
+end
+end)
+CreateButton(UDim2.new(0.95,0,0.05,0),Vector2.new(1,0),"THROW ALL","Switch",function(value)
+  _G.LoopThrow = value
+end,false)
+
+
+_G.LoopGrab = false
+task.spawn(function()
+while true do
+    task.wait(.02)
+    if _G.LoopGrab == true then
+    for i,v in game.Players:GetPlayers() do
+        if v.Name ~= LocalPlayer.Name then
+            RunEvent(v,"Grab")
+        end
+    end
+end
+end
+end)
+CreateButton(UDim2.new(0.95,0,0.25,0),Vector2.new(1,0),"GRAB ALL","Switch",function(value)
+  _G.LoopGrab = value
+end,false)
+
+
+CreateButton(UDim2.new(0.05,0,0.25,0),Vector2.new(0,0),"WALK WHILE GRAB","Switch",function(value)
+    _G.Unfreeze = value
+    LocalPlayer.Character.HumanoidRootPart.Anchored = false
+end,_G.Unfreeze)
+
+if LocalPlayer.Character ~= nil then
+    Connection = LocalPlayer.Character:FindFirstChild("HumanoidRootPart"):GetPropertyChangedSignal("Anchored"):Connect(function()
+        if _G.Unfreeze == true then
+             if LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                LocalPlayer.Character.HumanoidRootPart.Anchored = false
+             end
+         end
+     end)
+end
