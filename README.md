@@ -1,6 +1,6 @@
 # ETW Plus
-> [!IMPORTANT]
-> **Join my [discord server](https://discord.gg/vAWJMYJYcR) if you find any bugs or have issues with the script**
+> [!CAUTION]
+> **THIS SCRIPT IS PATCHED USE AT YOUR OWN RISK**
 > 
 ## Script thumbnail
 ![ETW Plus Thumbnail 2028](https://github.com/user-attachments/assets/5543e811-d257-4f7e-9d9b-304819cc8c52)
